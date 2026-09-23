@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: homepage-web-deployment
+  name: homepage-web
   namespace: homepage
 spec:
   replicas: 1

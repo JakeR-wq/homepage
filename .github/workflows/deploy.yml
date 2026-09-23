@@ -27,5 +27,5 @@ jobs:
 
       - name: Roll out homepage
         run: |
-          kubectl rollout restart deployment/homepage-web-deployment -n homepage
-          kubectl rollout status deployment/homepage-web-deployment -n homepage --timeout=120s
+          kubectl rollout restart deployment/homepage-web -n homepage
+          kubectl rollout status deployment/homepage-web -n homepage --timeout=120s
