@@ -28,3 +28,8 @@ jobs:
           sed -n 's/data:"index.html": "\(.*\)"/data:"index.html": "'"${{ github.workspace }}/index.html"'\n'" >> configmap.json
           echo '}' >> configmap.json
           kubectl apply -f - -n homepage -o yaml
+
+      - name: Roll out homepage
+        run: |
+          kubectl rollout restart deployment/homepage-web-deployment -n homepage
+          kubectl rollout status deployment/homepage-web-deployment -n homepage --timeout=120s
