@@ -1,0 +1,30 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+    env:
+      KUBECONFIG: /home/jake/.kube/config
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply k8s manifests
+        run: kubectl apply -k…          -n homepage \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Update ConfigMap
+        run: |
+          kubectl get configmap web-app-config -n homepage -o json > configmap.json
+          echo 'data:"index.html": "' >> configmap.json
+          cat configmap.json >> configmap.json
+          echo '}' >> configmap.json
+          echo 'data:"index.html": "' >> configmap.json
+          sed -n 's/data:"index.html": "\(.*\)"/data:"index.html": "'"${{ github.workspace }}/index.html"'\n'" >> configmap.json
+          echo '}' >> configmap.json
+          kubectl apply -f - -n homepage -o yaml
